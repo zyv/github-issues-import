@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectTasksOptions">
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="sh -c &quot;$PyInterpreterDirectory$/ruff check --fix $FilePath$ ; $PyInterpreterDirectory$/ruff format $FilePath$ ; $PyInterpreterDirectory$/ruff check --fix $FilePath$ ; $PyInterpreterDirectory$/ruff format $FilePath$&quot;" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="NEVER" />
+      <option name="fileExtension" value="py" />
+      <option name="immediateSync" value="false" />
+      <option name="name" value="Python (ruff)" />
+      <option name="output" value="$FilePath$" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="env" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="Python" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$ProjectFileDir$" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="-m json.tool --indent 2 --no-ensure-ascii $FilePath$ $FilePath$" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="json" />
+      <option name="immediateSync" value="false" />
+      <option name="name" value="JSON formatting" />
+      <option name="output" value="$FilePath$" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PyInterpreterDirectory$/python" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="JSON" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$ProjectFileDir$" />
+      <envs />
+    </TaskOptions>
+  </component>
+</project>
