@@ -2,6 +2,7 @@ import logging
 from datetime import datetime
 
 import httpx
+from pydantic import HttpUrl
 
 from .models import IssueImportRequest, IssueImportStatusResponse
 
@@ -42,8 +43,8 @@ class ApiClient:
         )
         return IssueImportStatusResponse.model_validate(response.json())
 
-    def get_status(self, url: str) -> IssueImportStatusResponse:
-        response = self._client.get(url)
+    def get_status(self, url: str | HttpUrl) -> IssueImportStatusResponse:
+        response = self._client.get(str(url) if isinstance(url, HttpUrl) else url)
         return IssueImportStatusResponse.model_validate(response.json())
 
     def get_status_multiple(self, owner: str, repository: str, date: datetime) -> list[IssueImportStatusResponse]:

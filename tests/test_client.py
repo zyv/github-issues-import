@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 
 import httpx
 import pytest
+from pydantic import HttpUrl
 from pytest_httpx import HTTPXMock
 
 from github_issues_import.client import ApiClient
@@ -61,7 +62,7 @@ def test_get_import_status(api_client: ApiClient, httpx_mock: HTTPXMock):
         text=import_status_response,
     )
 
-    response = api_client.get_status("https://api.github.com/repos/jonmagic/foo/import/issues/3")
+    response = api_client.get_status(HttpUrl("https://api.github.com/repos/jonmagic/foo/import/issues/3"))
     assert response == IssueImportStatusResponse.model_validate_json(import_status_response)
 
 
