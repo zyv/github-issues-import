@@ -1,0 +1,79 @@
+[project]
+name = "github-issues-import"
+description = "Modern, typesafe Python client for GitHub's unofficial API for importing issues"
+readme = "README.md"
+authors = [
+    { name = "Yury V. Zaytsev", email = "yury@shurup.com" }
+]
+repository = "https://github.com/zyv/github-issues-import"
+keywords = ["github", "github-api", "import", "pydantic", "httpx"]
+license = "MIT"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dynamic = ["version"]
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0",
+    "httpx",
+]
+
+[dependency-groups]
+dev = [
+    "hatch>=1.14.0",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "pytest-httpx>=0.35.0",
+    "ruff>=0.9.5",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/github_issues_import/__about__.py"
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "C4", # flake8-comprehensions
+    "COM", # flake8-commas
+    "DTZ", # flake8-datetimez
+    "E", # pycodestyle Error
+    "F", # Pyflakes
+    "I", # isort
+    "LOG", # flake8-logging
+    "PT", # flake8-pytest-style
+    "PTH", # flake8-use-pathlib
+    "Q", # flake8-quotes
+    "PYI", # flake8-pyi
+    "RSE", # flake8-raise
+    "RUF", # ruff-specific rules
+    "T10", # flake8-debugger
+    "T20", # flake8-print
+    "UP", # pyupgrade
+    "W", # pycodestyle Warning
+]
+
+ignore = []
+
+# Allow autofixing for all enabled rules (if `--fix`) is provided
+fixable = ["ALL"]
+unfixable = []
+
+[tool.pytest.ini_options]
+log_cli = true
+log_level = "DEBUG"
+addopts = "--cov --cov-fail-under=95"
+
+[tool.coverage.run]
+branch = true
+source = ["src"]

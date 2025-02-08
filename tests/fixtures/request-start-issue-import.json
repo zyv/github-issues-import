@@ -1,0 +1,13 @@
+{
+  "issue": {
+    "title": "Fix broken widgets",
+    "body": "- [ ] widget 1\n- [ ] widget 2",
+    "created_at": "2014-03-16T18:21:16Z"
+  },
+  "comments": [
+    {
+      "body": "Can we wrap this up soon?",
+      "created_at": "2014-03-16T17:15:42Z"
+    }
+  ]
+}

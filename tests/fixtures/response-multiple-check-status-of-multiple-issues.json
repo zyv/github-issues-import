@@ -1,0 +1,10 @@
+[
+  {
+    "id": 3,
+    "status": "imported",
+    "url": "https://api.github.com/repos/jonmagic/foo/import/issues/3",
+    "import_issues_url": "https://api.github.com/repos/jonmagic/foo/import/issues",
+    "repository_url": "https://api.github.com/repos/jonmagic/foo",
+    "issue_url": "https://api.github.com/repos/jonmagic/foo/issues/1"
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "id": 7,
+  "status": "failed",
+  "url": "https://api.github.com/repos/jonmagic/foo/import/issues/7",
+  "import_issues_url": "https://api.github.com/repos/jonmagic/foo/import/issues",
+  "repository_url": "https://api.github.com/repos/jonmagic/foo",
+  "created_at": "2015-03-18T19:40:53-07:00",
+  "updated_at": "2015-03-18T19:40:58-07:00",
+  "errors": [
+    {
+      "location": "/issue/milestone",
+      "resource": "Issue",
+      "field": "milestone",
+      "value": "5",
+      "code": "invalid"
+    },
+    {
+      "location": "/issue/assignee",
+      "resource": "Issue",
+      "field": "assignee",
+      "value": "bobbyfoobar",
+      "code": "invalid"
+    },
+    {
+      "location": "/issue/labels[1]",
+      "resource": "Label",
+      "field": "name",
+      "value": "invalid,label",
+      "code": "invalid"
+    }
+  ]
+}

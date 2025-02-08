@@ -1,0 +1,19 @@
+{
+  "id": 12,
+  "status": "failed",
+  "url": "https://api.github.com/repos/jonmagic/foo/import/issues/12",
+  "import_issues_url": "https://api.github.com/repos/jonmagic/foo/import/issues",
+  "repository_url": "https://api.github.com/repos/jonmagic/foo",
+  "created_at": "2015-03-18T21:45:58-07:00",
+  "updated_at": "2015-03-18T21:46:05-07:00",
+  "issue_url": "https://api.github.com/repos/jonmagic/foo/issues/7",
+  "errors": [
+    {
+      "location": "/comments[0]",
+      "resource": "IssueComment",
+      "field": null,
+      "value": null,
+      "code": "error"
+    }
+  ]
+}

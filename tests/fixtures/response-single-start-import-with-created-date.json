@@ -1,0 +1,8 @@
+{
+  "id": 12,
+  "status": "pending",
+  "url": "https://api.github.com/repos/jonmagic/foo/import/issues/12",
+  "import_issues_url": "https://api.github.com/repos/jonmagic/foo/import/issues",
+  "repository_url": "https://api.github.com/repos/jonmagic/foo",
+  "created_at": "2015-03-18T21:45:58-07:00"
+}
