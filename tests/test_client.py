@@ -1,5 +1,5 @@
 import json
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 import httpx
 import pytest
@@ -67,7 +67,7 @@ def test_get_import_status(api_client: ApiClient, httpx_mock: HTTPXMock):
 
 def test_get_import_status_multiple(api_client: ApiClient, httpx_mock: HTTPXMock):
     multiple_status_response = get_fixture("response-multiple-check-status-of-multiple-issues.json")
-    since = datetime.now(tz=UTC)
+    since = datetime.now(tz=timezone.utc)
 
     httpx_mock.add_response(
         url=httpx.URL(

@@ -63,7 +63,9 @@ select = [
     "W", # pycodestyle Warning
 ]
 
-ignore = []
+ignore = [
+    "UP017", # TODO: drop when Python 3.10 is EOL
+]
 
 # Allow autofixing for all enabled rules (if `--fix`) is provided
 fixable = ["ALL"]
