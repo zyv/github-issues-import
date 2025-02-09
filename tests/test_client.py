@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import datetime, timezone
 
 import httpx
@@ -21,6 +22,14 @@ def api_client():
 
 def test_init(api_client: ApiClient):
     assert api_client
+
+
+def test_base_url(httpx_mock: HTTPXMock):
+    httpx_mock.add_response(
+        url=re.compile(r"^https://test/repos/foo/bar/import/issues"),
+        text=get_fixture("response-multiple-check-status-of-multiple-issues.json"),
+    )
+    ApiClient(token=GITHUB_TOKEN, base_url="https://test").get_status_multiple("foo", "bar", datetime.now())
 
 
 def test_raise_for_status(api_client: ApiClient, httpx_mock: HTTPXMock):

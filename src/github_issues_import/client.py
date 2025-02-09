@@ -10,8 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class ApiClient:
-    _BASE_URL = "https://api.github.com"
-
     @staticmethod
     def _log_request(request: httpx.Request):
         logger.debug(f"GitHub API Request: {request.method} {request.url} {request.content.decode()}")
@@ -22,9 +20,9 @@ class ApiClient:
         response.read()
         logger.debug(f"GitHub API Response: {request.method} {request.url} {response.status_code} {response.text}")
 
-    def __init__(self, *, token: str):
+    def __init__(self, *, token: str, base_url: str = "https://api.github.com"):
         self._client = httpx.Client(
-            base_url=self._BASE_URL,
+            base_url=base_url,
             headers={
                 "Content-Type": "application/json",
                 "Accept": "application/vnd.github.golden-comet-preview+json",
