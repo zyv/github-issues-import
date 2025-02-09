@@ -42,3 +42,10 @@ status = client.import_issue("jonmagic", "i-got-issues", IssueImportRequest(
 result = client.get_status(status.url)
 print(result)
 ```
+
+## Development
+
+To release a new version and publish it to PyPI:
+
+* Bump version with `hatch` and commit
+* Create GitHub release (and tag)
