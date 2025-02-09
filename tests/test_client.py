@@ -16,7 +16,7 @@ GITHUB_TOKEN = "ghp_abc123"
 
 @pytest.fixture
 def api_client():
-    return ApiClient(GITHUB_TOKEN)
+    return ApiClient(token=GITHUB_TOKEN)
 
 
 def test_init(api_client: ApiClient):

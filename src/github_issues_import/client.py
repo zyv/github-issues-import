@@ -22,7 +22,7 @@ class ApiClient:
         response.read()
         logger.debug(f"GitHub API Response: {request.method} {request.url} {response.status_code} {response.text}")
 
-    def __init__(self, token: str):
+    def __init__(self, *, token: str):
         self._client = httpx.Client(
             base_url=self._BASE_URL,
             headers={
