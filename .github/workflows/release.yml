@@ -23,7 +23,7 @@ jobs:
       - name: Get version
         id: version
         run: |
-          echo "VERSION=$(hatch version)" >> $GITHUB_OUTPUT
+          echo "VERSION=$(uv run hatch version)" >> $GITHUB_OUTPUT
           echo "TAG_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Check version
