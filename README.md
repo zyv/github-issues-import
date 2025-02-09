@@ -23,7 +23,7 @@ $ pip install github-issues-import
 * [Pydantic V2](https://pydantic.dev)
 * [httpx](https://www.python-httpx.org)
 
-# Usage
+## Usage
 
 ```python
 import os
