@@ -48,4 +48,5 @@ print(result)
 To release a new version and publish it to PyPI:
 
 * Bump version with `hatch` and commit
+  * `hatch version minor` or `hatch version patch`
 * Create GitHub release (and tag)
