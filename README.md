@@ -29,7 +29,7 @@ import os
 from github_issues_import.client import ApiClient
 from github_issues_import.models import IssueImportRequest, Issue, Comment
 
-client = ApiClient(os.environ["GITHUB_TOKEN"])
+client = ApiClient(token=os.environ["GITHUB_TOKEN"])
 
 status = client.import_issue("jonmagic", "i-got-issues", IssueImportRequest(
     issue=Issue(
