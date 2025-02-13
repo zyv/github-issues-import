@@ -1,8 +1,7 @@
-from datetime import datetime
 from typing import Literal
 
+from pydantic import AwareDatetime, ConfigDict, HttpUrl
 from pydantic import BaseModel as PydanticBaseModel
-from pydantic import ConfigDict, HttpUrl
 
 DEFAULT_CONFIG = ConfigDict(
     populate_by_name=True,
@@ -19,9 +18,9 @@ class BaseModel(PydanticBaseModel):
 class Issue(BaseModel):
     title: str
     body: str
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
-    closed_at: datetime | None = None
+    created_at: AwareDatetime | None = None
+    updated_at: AwareDatetime | None = None
+    closed_at: AwareDatetime | None = None
     assignee: str | None = None
     milestone: int | None = None
     closed: bool | None = None
@@ -30,7 +29,7 @@ class Issue(BaseModel):
 
 class Comment(BaseModel):
     body: str
-    created_at: datetime | None = None
+    created_at: AwareDatetime | None = None
 
 
 class IssueImportRequest(BaseModel):
@@ -55,8 +54,8 @@ class IssueImportStatusResponse(BaseModel):
 
     issue_url: HttpUrl | None = None  # if "imported"
 
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
+    created_at: AwareDatetime | None = None
+    updated_at: AwareDatetime | None = None
 
     # if "failed"
     errors: list[IssueImportError] | None = None

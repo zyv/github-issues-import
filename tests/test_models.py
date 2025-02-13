@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 from pathlib import Path
 
 import pytest
@@ -15,7 +16,9 @@ def test_issue_import_request(fixture: Path):
 
 @pytest.mark.parametrize("fixture", get_fixtures("response-single-*.json"))
 def test_issue_import_status_response(fixture: Path):
-    IssueImportStatusResponse.model_validate_json(get_fixture(fixture))
+    response = IssueImportStatusResponse.model_validate_json(get_fixture(fixture))
+    if response.created_at is not None:
+        assert response.created_at.tzinfo.utcoffset(response.created_at) == timedelta(hours=-7)
 
 
 def test_issue_import_status_multiple():
