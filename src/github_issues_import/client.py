@@ -2,6 +2,8 @@ import logging
 from datetime import datetime
 
 import httpx
+from httpx import USE_CLIENT_DEFAULT
+from httpx._types import TimeoutTypes
 from pydantic import HttpUrl
 
 from .models import IssueImportRequest, IssueImportStatusResponse
@@ -20,7 +22,13 @@ class ApiClient:
         response.read()
         logger.debug(f"GitHub API Response: {request.method} {request.url} {response.status_code} {response.text}")
 
-    def __init__(self, *, token: str, base_url: str = "https://api.github.com"):
+    def __init__(
+        self,
+        *,
+        token: str,
+        base_url: str = "https://api.github.com",
+        timeout: TimeoutTypes = USE_CLIENT_DEFAULT,
+    ):
         self._client = httpx.Client(
             base_url=base_url,
             headers={
@@ -32,6 +40,7 @@ class ApiClient:
                 "request": [self._log_request],
                 "response": [self._log_response, httpx.Response.raise_for_status],
             },
+            timeout=timeout,
         )
 
     def import_issue(self, owner: str, repository: str, issue: IssueImportRequest) -> IssueImportStatusResponse:

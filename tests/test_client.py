@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 
 import httpx
 import pytest
+from httpx import USE_CLIENT_DEFAULT
 from pydantic import HttpUrl
 from pytest_httpx import HTTPXMock
 
@@ -22,6 +23,35 @@ def api_client():
 
 def test_init(api_client: ApiClient):
     assert api_client
+
+
+def test_timeout_default(httpx_mock: HTTPXMock):
+    httpx_mock.add_response(
+        match_extensions={
+            "timeout": {
+                "connect": USE_CLIENT_DEFAULT,
+                "read": USE_CLIENT_DEFAULT,
+                "write": USE_CLIENT_DEFAULT,
+                "pool": USE_CLIENT_DEFAULT,
+            }
+        },
+        status_code=httpx.codes.BAD_GATEWAY,
+    )
+    with pytest.raises(httpx.HTTPStatusError):
+        ApiClient(token=GITHUB_TOKEN, base_url="https://test").get_status_multiple(
+            "foo", "bar", datetime.now(tz=timezone.utc)
+        )
+
+
+def test_timeout_set(httpx_mock: HTTPXMock):
+    httpx_mock.add_response(
+        match_extensions={"timeout": {"connect": 123, "read": 123, "write": 123, "pool": 123}},
+        status_code=httpx.codes.BAD_GATEWAY,
+    )
+    with pytest.raises(httpx.HTTPStatusError):
+        ApiClient(token=GITHUB_TOKEN, base_url="https://test", timeout=123).get_status_multiple(
+            "foo", "bar", datetime.now(tz=timezone.utc)
+        )
 
 
 def test_base_url(httpx_mock: HTTPXMock):
