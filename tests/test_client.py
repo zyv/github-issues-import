@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 import httpx
 import pytest
-from httpx import USE_CLIENT_DEFAULT
+from httpx._config import DEFAULT_TIMEOUT_CONFIG
 from pydantic import HttpUrl
 from pytest_httpx import HTTPXMock
 
@@ -29,10 +29,10 @@ def test_timeout_default(httpx_mock: HTTPXMock):
     httpx_mock.add_response(
         match_extensions={
             "timeout": {
-                "connect": USE_CLIENT_DEFAULT,
-                "read": USE_CLIENT_DEFAULT,
-                "write": USE_CLIENT_DEFAULT,
-                "pool": USE_CLIENT_DEFAULT,
+                "connect": DEFAULT_TIMEOUT_CONFIG.connect,
+                "read": DEFAULT_TIMEOUT_CONFIG.read,
+                "write": DEFAULT_TIMEOUT_CONFIG.write,
+                "pool": DEFAULT_TIMEOUT_CONFIG.pool,
             }
         },
         status_code=httpx.codes.BAD_GATEWAY,
