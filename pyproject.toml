@@ -67,8 +67,7 @@ select = [
 ]
 
 ignore = [
-    "COM812",
-    "UP017", # TODO: drop when Python 3.10 is EOL
+    "COM812", # comma consistency enforced by formatter
 ]
 
 fixable = ["ALL"]

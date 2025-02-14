@@ -1,6 +1,6 @@
 import json
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import httpx
 import pytest
@@ -38,9 +38,7 @@ def test_timeout_default(httpx_mock: HTTPXMock):
         status_code=httpx.codes.BAD_GATEWAY,
     )
     with pytest.raises(httpx.HTTPStatusError):
-        ApiClient(token=GITHUB_TOKEN, base_url="https://test").get_status_multiple(
-            "foo", "bar", datetime.now(tz=timezone.utc)
-        )
+        ApiClient(token=GITHUB_TOKEN, base_url="https://test").get_status_multiple("foo", "bar", datetime.now(tz=UTC))
 
 
 def test_timeout_set(httpx_mock: HTTPXMock):
@@ -50,7 +48,7 @@ def test_timeout_set(httpx_mock: HTTPXMock):
     )
     with pytest.raises(httpx.HTTPStatusError):
         ApiClient(token=GITHUB_TOKEN, base_url="https://test", timeout=123).get_status_multiple(
-            "foo", "bar", datetime.now(tz=timezone.utc)
+            "foo", "bar", datetime.now(tz=UTC)
         )
 
 
@@ -59,9 +57,7 @@ def test_base_url(httpx_mock: HTTPXMock):
         url=re.compile(r"^https://test/repos/foo/bar/import/issues"),
         text=get_fixture("response-multiple-check-status-of-multiple-issues.json"),
     )
-    ApiClient(token=GITHUB_TOKEN, base_url="https://test").get_status_multiple(
-        "foo", "bar", datetime.now(tz=timezone.utc)
-    )
+    ApiClient(token=GITHUB_TOKEN, base_url="https://test").get_status_multiple("foo", "bar", datetime.now(tz=UTC))
 
 
 def test_raise_for_status(api_client: ApiClient, httpx_mock: HTTPXMock):
@@ -109,7 +105,7 @@ def test_get_import_status(api_client: ApiClient, httpx_mock: HTTPXMock):
 
 def test_get_import_status_multiple(api_client: ApiClient, httpx_mock: HTTPXMock):
     multiple_status_response = get_fixture("response-multiple-check-status-of-multiple-issues.json")
-    since = datetime.now(tz=timezone.utc)
+    since = datetime.now(tz=UTC)
 
     httpx_mock.add_response(
         url=httpx.URL(
