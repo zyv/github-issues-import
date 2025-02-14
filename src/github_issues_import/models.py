@@ -1,4 +1,4 @@
-from typing import Literal
+from enum import StrEnum, auto
 
 from pydantic import AwareDatetime, ConfigDict, HttpUrl
 from pydantic import BaseModel as PydanticBaseModel
@@ -50,9 +50,15 @@ class IssueImportError(BaseModel):
     code: str
 
 
+class IssueImportStatus(StrEnum):
+    PENDING = auto()
+    IMPORTED = auto()
+    FAILED = auto()
+
+
 class IssueImportStatusResponse(BaseModel):
     id: int
-    status: Literal["pending", "imported", "failed"]
+    status: IssueImportStatus
     url: HttpUrl
     import_issues_url: HttpUrl
     repository_url: HttpUrl

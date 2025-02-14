@@ -9,7 +9,7 @@ from pydantic import HttpUrl
 from pytest_httpx import HTTPXMock
 
 from github_issues_import.client import ApiClient
-from github_issues_import.models import IssueImportRequest, IssueImportStatusResponse
+from github_issues_import.models import IssueImportRequest, IssueImportStatus, IssueImportStatusResponse
 
 from .utils import get_fixture
 
@@ -87,7 +87,7 @@ def test_import_issue(api_client: ApiClient, httpx_mock: HTTPXMock):
     )
 
     assert response == IssueImportStatusResponse.model_validate_json(import_response)
-
+    assert response.status == IssueImportStatus.PENDING
     request = httpx_mock.get_request()
 
     assert request.url == "https://api.github.com/repos/owner/repository/import/issues"
