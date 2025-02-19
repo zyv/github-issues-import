@@ -1,6 +1,7 @@
 import json
 import re
 from datetime import UTC, datetime
+from unittest.mock import MagicMock
 
 import httpx
 import pytest
@@ -8,7 +9,7 @@ from httpx._config import DEFAULT_TIMEOUT_CONFIG
 from pydantic import HttpUrl
 from pytest_httpx import HTTPXMock
 
-from github_issues_import.client import ApiClient
+from github_issues_import.client import ApiClient, HttpClient
 from github_issues_import.models import IssueImportRequest, IssueImportStatus, IssueImportStatusResponse
 
 from .utils import get_fixture
@@ -18,7 +19,7 @@ GITHUB_TOKEN = "ghp_abc123"
 
 @pytest.fixture
 def api_client():
-    return ApiClient(token=GITHUB_TOKEN)
+    return ApiClient(http_client=HttpClient(token=GITHUB_TOKEN))
 
 
 def test_init(api_client: ApiClient):
@@ -38,7 +39,7 @@ def test_timeout_default(httpx_mock: HTTPXMock):
         status_code=httpx.codes.BAD_GATEWAY,
     )
     with pytest.raises(httpx.HTTPStatusError):
-        ApiClient(token=GITHUB_TOKEN, base_url="https://test").get_status_multiple("foo", "bar", datetime.now(tz=UTC))
+        ApiClient(http_client=HttpClient(token=GITHUB_TOKEN)).get_status_multiple("foo", "bar", datetime.now(tz=UTC))
 
 
 def test_timeout_set(httpx_mock: HTTPXMock):
@@ -47,7 +48,7 @@ def test_timeout_set(httpx_mock: HTTPXMock):
         status_code=httpx.codes.BAD_GATEWAY,
     )
     with pytest.raises(httpx.HTTPStatusError):
-        ApiClient(token=GITHUB_TOKEN, base_url="https://test", timeout=123).get_status_multiple(
+        ApiClient(http_client=HttpClient(token=GITHUB_TOKEN, timeout=123)).get_status_multiple(
             "foo", "bar", datetime.now(tz=UTC)
         )
 
@@ -57,7 +58,21 @@ def test_base_url(httpx_mock: HTTPXMock):
         url=re.compile(r"^https://test/repos/foo/bar/import/issues"),
         text=get_fixture("response-multiple-check-status-of-multiple-issues.json"),
     )
-    ApiClient(token=GITHUB_TOKEN, base_url="https://test").get_status_multiple("foo", "bar", datetime.now(tz=UTC))
+    ApiClient(http_client=HttpClient(token=GITHUB_TOKEN, base_url="https://test")).get_status_multiple(
+        "foo", "bar", datetime.now(tz=UTC)
+    )
+
+
+def test_event_hooks(monkeypatch, httpx_mock: HTTPXMock):
+    httpx_mock.add_response(text=get_fixture("response-multiple-check-status-of-multiple-issues.json"))
+
+    mock = MagicMock()
+    monkeypatch.setattr(HttpClient, "log_github_api_request", mock)
+
+    ApiClient(http_client=HttpClient(token=GITHUB_TOKEN, base_url="https://test", event_hooks={})).get_status_multiple(
+        "foo", "bar", datetime.now(tz=UTC)
+    )
+    mock.assert_not_called()
 
 
 def test_raise_for_status(api_client: ApiClient, httpx_mock: HTTPXMock):
@@ -84,10 +99,11 @@ def test_import_issue(api_client: ApiClient, httpx_mock: HTTPXMock):
 
     assert response == IssueImportStatusResponse.model_validate_json(import_response)
     assert response.status == IssueImportStatus.PENDING
+
     request = httpx_mock.get_request()
 
     assert request.url == "https://api.github.com/repos/owner/repository/import/issues"
-    assert request.headers["Authorization"] == f"token {GITHUB_TOKEN}"
+    assert request.headers["Authorization"] == f"Token {GITHUB_TOKEN}"
     assert json.loads(request.content) == json.loads(import_request)
 
 
