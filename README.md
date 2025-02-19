@@ -26,10 +26,10 @@ $ pip install github-issues-import
 
 ```python
 import os
-from github_issues_import.client import ApiClient
+from github_issues_import.client import ApiClient, HttpClient
 from github_issues_import.models import IssueImportRequest, Issue, Comment
 
-client = ApiClient(token=os.environ["GITHUB_TOKEN"])
+client = ApiClient(http_client=HttpClient(token=os.environ["GITHUB_TOKEN"]))
 
 status = client.import_issue("jonmagic", "i-got-issues", IssueImportRequest(
     issue=Issue(
@@ -41,6 +41,20 @@ status = client.import_issue("jonmagic", "i-got-issues", IssueImportRequest(
 
 result = client.get_status(status.url)
 print(result)
+```
+
+### Advanced usage
+
+```python
+import os
+import httpx
+from github_issues_import.client import ApiClient, HttpClient
+
+# httpx client options
+client1 = ApiClient(http_client=HttpClient(token=os.environ["GITHUB_TOKEN"], timeout=60))
+
+# own httpx-based client
+client2 = ApiClient(http_client=httpx.Client(base_url=HttpClient.BASE_URL))
 ```
 
 ## Development
