@@ -1,46 +1,56 @@
 import logging
 from datetime import datetime
+from typing import ClassVar
 
 import httpx
-from httpx._types import TimeoutTypes
 from pydantic import HttpUrl
 
-from .models import UNSET, IssueImportRequest, IssueImportStatusResponse
+from .models import IssueImportRequest, IssueImportStatusResponse
 
 logger = logging.getLogger(__name__)
 
 
-class ApiClient:
+class HttpClient(httpx.Client):
     @staticmethod
-    def _log_request(request: httpx.Request):
+    def log_github_api_request(request: httpx.Request):
         logger.debug(f"GitHub API Request: {request.method} {request.url} {request.content.decode()}")
 
     @staticmethod
-    def _log_response(response: httpx.Response):
+    def log_github_api_response(response: httpx.Response):
         request = response.request
         response.read()
         logger.debug(f"GitHub API Response: {request.method} {request.url} {response.status_code} {response.text}")
 
+    HEADERS: ClassVar = {
+        "Content-Type": "application/json",
+        "Accept": "application/vnd.github.golden-comet-preview+json",
+    }
+
+    BASE_URL = "https://api.github.com"
+
+    def __init__(self, *, token: str, base_url: str = BASE_URL, headers=None, event_hooks=None, **kwargs):
+        super().__init__(
+            base_url=base_url,
+            headers=headers if headers is not None else {"Authorization": f"Token {token}"} | self.HEADERS,
+            event_hooks=(
+                event_hooks
+                if event_hooks is not None
+                else {
+                    "request": [HttpClient.log_github_api_request],
+                    "response": [HttpClient.log_github_api_response, httpx.Response.raise_for_status],
+                }
+            ),
+            **kwargs,
+        )
+
+
+class ApiClient:
     def __init__(
         self,
         *,
-        token: str,
-        base_url: str = "https://api.github.com",
-        timeout: TimeoutTypes | UNSET = UNSET,
+        http_client: httpx.Client,
     ):
-        self._client = httpx.Client(
-            base_url=base_url,
-            headers={
-                "Content-Type": "application/json",
-                "Accept": "application/vnd.github.golden-comet-preview+json",
-                "Authorization": f"token {token}",
-            },
-            event_hooks={
-                "request": [self._log_request],
-                "response": [self._log_response, httpx.Response.raise_for_status],
-            },
-            **({"timeout": timeout} if timeout is not UNSET else {}),
-        )
+        self._client = http_client
 
     def import_issue(self, owner: str, repository: str, issue: IssueImportRequest) -> IssueImportStatusResponse:
         response = self._client.post(

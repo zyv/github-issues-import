@@ -3,11 +3,6 @@ from enum import StrEnum, auto
 from pydantic import AwareDatetime, ConfigDict, HttpUrl
 from pydantic import BaseModel as PydanticBaseModel
 
-
-class UNSET:
-    pass
-
-
 DEFAULT_CONFIG = ConfigDict(
     populate_by_name=True,
     validate_default=True,
