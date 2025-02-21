@@ -50,21 +50,21 @@ class ApiClient:
         *,
         http_client: httpx.Client,
     ):
-        self._client = http_client
+        self._http_client = http_client
 
     def import_issue(self, owner: str, repository: str, issue: IssueImportRequest) -> IssueImportStatusResponse:
-        response = self._client.post(
+        response = self._http_client.post(
             url=f"/repos/{owner}/{repository}/import/issues",
             content=(issue.model_dump_json(exclude_none=True)),
         )
         return IssueImportStatusResponse.model_validate(response.json())
 
     def get_status(self, url: str | HttpUrl) -> IssueImportStatusResponse:
-        response = self._client.get(str(url) if isinstance(url, HttpUrl) else url)
+        response = self._http_client.get(str(url) if isinstance(url, HttpUrl) else url)
         return IssueImportStatusResponse.model_validate(response.json())
 
     def get_status_multiple(self, owner: str, repository: str, date: datetime) -> list[IssueImportStatusResponse]:
-        response = self._client.get(
+        response = self._http_client.get(
             url=f"/repos/{owner}/{repository}/import/issues",
             params={"since": date.isoformat()},
         )
