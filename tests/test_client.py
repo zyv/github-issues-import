@@ -78,8 +78,8 @@ def test_default_event_hooks(monkeypatch, respx_mock: respx.mock):
             IssueImportRequest.model_validate_json(get_fixture("request-issue-and-comment-fields.json")),
         )
 
-    mock_log_request.assert_called()
-    mock_log_response.assert_called()
+    mock_log_request.assert_called_once()
+    mock_log_response.assert_called_once()
 
 
 def test_import_issue(api_client: ApiClient, respx_mock: respx.mock):
