@@ -16,7 +16,7 @@
       <option name="outputFromStdout" value="false" />
       <option name="program" value="env" />
       <option name="runOnExternalChanges" value="true" />
-      <option name="scopeName" value="Python" />
+      <option name="scopeName" value="Project Files Excluding Git-ignored" />
       <option name="trackOnlyRoot" value="false" />
       <option name="workingDir" value="$ProjectFileDir$" />
       <envs />
@@ -25,7 +25,7 @@
       <option name="arguments" value="-m json.tool --indent 2 --no-ensure-ascii $FilePath$ $FilePath$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
-      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="exitCodeBehavior" value="NEVER" />
       <option name="fileExtension" value="json" />
       <option name="immediateSync" value="false" />
       <option name="name" value="JSON formatting" />
@@ -36,7 +36,7 @@
       <option name="outputFromStdout" value="false" />
       <option name="program" value="$PyInterpreterDirectory$/python" />
       <option name="runOnExternalChanges" value="true" />
-      <option name="scopeName" value="JSON" />
+      <option name="scopeName" value="Project Files Excluding Git-ignored" />
       <option name="trackOnlyRoot" value="false" />
       <option name="workingDir" value="$ProjectFileDir$" />
       <envs />
