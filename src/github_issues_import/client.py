@@ -28,7 +28,7 @@ class HttpClient(httpx.Client):
 
     BASE_URL = "https://api.github.com"
 
-    def __init__(self, *, token: str, base_url: str = BASE_URL, headers=None, event_hooks=None, **kwargs):
+    def __init__(self, token: str, *, base_url: str = BASE_URL, headers=None, event_hooks=None, **kwargs):
         super().__init__(
             base_url=base_url,
             headers=headers if headers is not None else {"Authorization": f"Token {token}"} | self.HEADERS,
