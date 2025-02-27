@@ -60,7 +60,7 @@ def test_event_hooks_override(monkeypatch, respx_mock: respx.mock):
     mock_log_response.assert_not_called()
 
 
-def test_default_event_hooks(monkeypatch, respx_mock: respx.mock):
+def test_event_hooks_default(monkeypatch, respx_mock: respx.mock):
     respx_mock.post("https://api.github.com/repos/foo/bar/import/issues").mock(
         return_value=httpx.Response(httpx.codes.BAD_GATEWAY)
     )
