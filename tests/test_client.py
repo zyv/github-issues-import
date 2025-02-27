@@ -71,12 +71,13 @@ def test_event_hooks_default(monkeypatch, respx_mock: respx.mock):
 
     api_client = ApiClient(http_client=HttpClient(token=GITHUB_TOKEN))
 
-    with pytest.raises(httpx.HTTPStatusError):
+    with pytest.raises(httpx.HTTPStatusError) as excinfo:
         api_client.import_issue(
             "foo",
             "bar",
             IssueImportRequest.model_validate_json(get_fixture("request-issue-and-comment-fields.json")),
         )
+    assert "502 Bad Gateway" in str(excinfo.value)
 
     mock_log_request.assert_called_once()
     mock_log_response.assert_called_once()
