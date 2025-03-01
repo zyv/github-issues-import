@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 import httpx
 import pytest
 import respx
+from _pytest.monkeypatch import MonkeyPatch
 from pydantic import HttpUrl
 
 from github_issues_import.client import ApiClient, HttpClient
@@ -46,7 +47,7 @@ def test_headers_override(respx_mock: respx.mock):
     assert "Authorization" not in respx_mock.calls.last.request.headers
 
 
-def test_event_hooks_override(monkeypatch, respx_mock: respx.mock):
+def test_event_hooks_override(monkeypatch: MonkeyPatch, respx_mock: respx.mock):
     respx_mock.get().mock(return_value=RESPONSE_STATUS_MULTIPLE_ISSUES)
 
     mock_log_request, mock_log_response = MagicMock(), MagicMock()
@@ -60,7 +61,7 @@ def test_event_hooks_override(monkeypatch, respx_mock: respx.mock):
     mock_log_response.assert_not_called()
 
 
-def test_event_hooks_default(monkeypatch, respx_mock: respx.mock):
+def test_event_hooks_default(monkeypatch: MonkeyPatch, respx_mock: respx.mock):
     respx_mock.post("https://api.github.com/repos/foo/bar/import/issues").mock(
         return_value=httpx.Response(httpx.codes.BAD_GATEWAY)
     )
