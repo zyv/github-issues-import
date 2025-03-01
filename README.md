@@ -1,7 +1,7 @@
 # GitHub Issues Import API Client for Python
 
 [![PyPI License](https://img.shields.io/pypi/l/github-issues-import)](https://github.com/zyv/github-issues-import/blob/main/LICENSE)
-[![PyPI project](https://img.shields.io/pypi/v/github-issues-import.svg?logo=python&logoColor=edb641)](https://pypi.python.org/pypi/ruff)
+[![PyPI project](https://img.shields.io/pypi/v/github-issues-import.svg?logo=python&logoColor=edb641)](https://pypi.python.org/pypi/github-issues-import)
 ![Python versions](https://img.shields.io/pypi/pyversions/github-issues-import.svg?logo=python&logoColor=edb641)
 [![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://docs.pydantic.dev/latest/contributing/#badges)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
