@@ -14,12 +14,9 @@ from github_issues_import.models import IssueImportRequest, IssueImportStatus, I
 
 from .utils import get_fixture
 
-RESPONSE_STATUS_MULTIPLE_ISSUES = httpx.Response(
-    httpx.codes.OK,
-    text=get_fixture("response-multiple-check-status-of-multiple-issues.json"),
-)
-
 GITHUB_TOKEN = "ghp_abc123"
+
+RESPONSE_STATUS_MULTIPLE_ISSUES = get_fixture("response-multiple-check-status-of-multiple-issues.json")
 
 
 @pytest.fixture
@@ -32,14 +29,14 @@ def test_simple_client_init(api_client: ApiClient):
 
 
 def test_base_url_override(respx_mock: respx.mock):
-    respx_mock.get(url="https://test/repos/foo/bar/import/issues").mock(return_value=RESPONSE_STATUS_MULTIPLE_ISSUES)
+    respx_mock.get(url="https://test/repos/foo/bar/import/issues").respond(text=RESPONSE_STATUS_MULTIPLE_ISSUES)
 
     api_client = ApiClient(http_client=HttpClient(token=GITHUB_TOKEN, base_url="https://test"))
     api_client.get_status_multiple("foo", "bar", datetime.now(tz=UTC))
 
 
 def test_headers_override(respx_mock: respx.mock):
-    respx_mock.get(headers={"Foo": "Bar"}).mock(return_value=RESPONSE_STATUS_MULTIPLE_ISSUES)
+    respx_mock.get(headers={"Foo": "Bar"}).respond(text=RESPONSE_STATUS_MULTIPLE_ISSUES)
 
     api_client = ApiClient(http_client=HttpClient(token=GITHUB_TOKEN, headers={"Foo": "Bar"}))
     api_client.get_status_multiple("foo", "bar", datetime.now(tz=UTC))
@@ -48,7 +45,7 @@ def test_headers_override(respx_mock: respx.mock):
 
 
 def test_event_hooks_override(monkeypatch: MonkeyPatch, respx_mock: respx.mock):
-    respx_mock.get().mock(return_value=RESPONSE_STATUS_MULTIPLE_ISSUES)
+    respx_mock.get().respond(text=RESPONSE_STATUS_MULTIPLE_ISSUES)
 
     mock_log_request, mock_log_response = MagicMock(), MagicMock()
     monkeypatch.setattr(HttpClient, "log_github_api_request", mock_log_request)
@@ -62,9 +59,7 @@ def test_event_hooks_override(monkeypatch: MonkeyPatch, respx_mock: respx.mock):
 
 
 def test_event_hooks_default(monkeypatch: MonkeyPatch, respx_mock: respx.mock):
-    respx_mock.post("https://api.github.com/repos/foo/bar/import/issues").mock(
-        return_value=httpx.Response(httpx.codes.BAD_GATEWAY)
-    )
+    respx_mock.post("https://api.github.com/repos/foo/bar/import/issues") % httpx.codes.BAD_GATEWAY
 
     mock_log_request, mock_log_response = MagicMock(), MagicMock()
     monkeypatch.setattr(HttpClient, "log_github_api_request", mock_log_request)
@@ -92,7 +87,7 @@ def test_import_issue(api_client: ApiClient, respx_mock: respx.mock):
         method=HTTPMethod.POST,
         url="https://api.github.com/repos/owner/repository/import/issues",
         headers={"Authorization": f"Token {GITHUB_TOKEN}"} | HttpClient.HEADERS,
-    ).mock(return_value=httpx.Response(httpx.codes.ACCEPTED, text=import_response))
+    ).respond(status_code=httpx.codes.ACCEPTED, text=import_response)
 
     response = api_client.import_issue(
         "owner",
@@ -107,16 +102,13 @@ def test_import_issue(api_client: ApiClient, respx_mock: respx.mock):
 def test_get_import_status(api_client: ApiClient, respx_mock: respx.mock):
     import_status_response = get_fixture("response-single-check-status-of-issue-import.json")
 
-    respx_mock.get("https://api.github.com/repos/jonmagic/foo/import/issues/3").mock(
-        return_value=httpx.Response(httpx.codes.OK, text=import_status_response)
-    )
+    respx_mock.get("https://api.github.com/repos/jonmagic/foo/import/issues/3").respond(text=import_status_response)
 
     response = api_client.get_status(HttpUrl("https://api.github.com/repos/jonmagic/foo/import/issues/3"))
     assert response == IssueImportStatusResponse.model_validate_json(import_status_response)
 
 
 def test_get_import_status_multiple(api_client: ApiClient, respx_mock: respx.mock):
-    multiple_status_response = get_fixture("response-multiple-check-status-of-multiple-issues.json")
     since = datetime.now(tz=UTC)
 
     respx_mock.get(
@@ -124,7 +116,7 @@ def test_get_import_status_multiple(api_client: ApiClient, respx_mock: respx.moc
             "https://api.github.com/repos/foo/bar/import/issues",
             params={"since": since.isoformat()},
         )
-    ).mock(return_value=RESPONSE_STATUS_MULTIPLE_ISSUES)
+    ).respond(text=RESPONSE_STATUS_MULTIPLE_ISSUES)
 
     response = api_client.get_status_multiple("foo", "bar", since)
-    assert response == [IssueImportStatusResponse.model_validate(json.loads(multiple_status_response)[0])]
+    assert response == [IssueImportStatusResponse.model_validate(json.loads(RESPONSE_STATUS_MULTIPLE_ISSUES)[0])]
