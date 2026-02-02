@@ -1,12 +1,19 @@
+import datetime
 import json
 from datetime import timedelta
 from pathlib import Path
 
 import pytest
 
-from github_issues_import.models import IssueImportRequest, IssueImportStatusResponse
+from github_issues_import.models import Comment, IssueImportRequest, IssueImportStatusResponse
 
 from .utils import get_fixture, get_fixtures
+
+
+def test_issue_comment():
+    comment = Comment(body="Hello world!", created_at=datetime.datetime(2022, 1, 1, tzinfo=datetime.UTC))
+    assert comment.body == "Hello world!"
+    assert comment.created_at.year == 2022
 
 
 @pytest.mark.parametrize("fixture", get_fixtures("request-*.json"))
